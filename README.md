@@ -54,3 +54,9 @@ Los tabs del footer móvil ("Pendientes" / "Resueltos") eran puramente decorativ
 - **Mobile:** Footer funcional con 3 tabs (Pendientes / Todos / Resueltos) que filtran tickets por estado
 - **Desktop:** Tabs de filtro visibles arriba de la lista de tickets
 - Mensaje vacío contextual según el filtro seleccionado
+
+#### Desktop
+![Filtros en desktop](public/screenshots/filter-desktop.png)
+
+#### Mobile
+![Filtros en mobile](public/screenshots/filter-mobile.png)
