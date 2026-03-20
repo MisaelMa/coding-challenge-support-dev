@@ -21,6 +21,11 @@ export default function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [loading, setLoading] = useState(true)
   const [resolvingId, setResolvingId] = useState<string | null>(null)
+  const [filter, setFilter] = useState<"Todos" | "Abierto" | "Resuelto">("Todos")
+
+  const filteredTickets = tickets.filter((t) =>
+    filter === "Todos" ? true : t.status === filter
+  )
 
   useEffect(() => {
     fetchTickets()
@@ -91,13 +96,30 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Desktop filter tabs */}
+        <div className="hidden md:flex gap-2 mb-4">
+          {(["Todos", "Abierto", "Resuelto"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setFilter(tab)}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                filter === tab
+                  ? "bg-blue-600 text-white"
+                  : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
         <div className="space-y-4">
-          {tickets.length === 0 ? (
+          {filteredTickets.length === 0 ? (
             <div className="text-center py-10 bg-white rounded-lg shadow-sm border border-gray-100 text-gray-500">
-              No hay tickets pendientes. ¡Buen trabajo!
+              {filter === "Todos" ? "No hay tickets. ¡Buen trabajo!" : `No hay tickets con estado "${filter}".`}
             </div>
           ) : (
-            tickets.map((ticket) => (
+            filteredTickets.map((ticket) => (
               <div 
                 key={ticket.id} 
                 className={`bg-white rounded-lg shadow-sm border p-5 transition-colors ${
@@ -165,16 +187,20 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* Mobile Sticky Footer - Causa el Bug 1 en móviles */}
+      {/* Mobile Sticky Footer */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] p-4 flex justify-around items-center z-50">
-        <div className="flex flex-col items-center text-blue-600">
+        <button onClick={() => setFilter("Abierto")} className={`flex flex-col items-center transition-colors ${filter === "Abierto" ? "text-blue-600" : "text-gray-400"}`}>
           <Clock className="w-6 h-6 mb-1" />
           <span className="text-xs font-medium">Pendientes</span>
-        </div>
-        <div className="flex flex-col items-center text-gray-400 hover:text-gray-600 transition-colors">
+        </button>
+        <button onClick={() => setFilter("Todos")} className={`flex flex-col items-center transition-colors ${filter === "Todos" ? "text-blue-600" : "text-gray-400"}`}>
+          <AlertCircle className="w-6 h-6 mb-1" />
+          <span className="text-xs font-medium">Todos</span>
+        </button>
+        <button onClick={() => setFilter("Resuelto")} className={`flex flex-col items-center transition-colors ${filter === "Resuelto" ? "text-green-600" : "text-gray-400"}`}>
           <CheckCircle className="w-6 h-6 mb-1" />
           <span className="text-xs font-medium">Resueltos</span>
-        </div>
+        </button>
       </div>
 
     </div>
