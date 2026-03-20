@@ -77,10 +77,7 @@ export default function Dashboard() {
   }
 
   return (
-    // BUG 1 INTENCIONAL: El Navbar inferior bloquea el contenido
-    // En móviles, falta un padding inferior (ej. pb-20) en este contenedor para que el 
-    // último ticket no quede escondido detrás del fixed footer y su botón sea in-clickeable.
-    <div className="min-h-screen bg-gray-50 relative">
+    <div className="min-h-screen bg-gray-50 relative pb-24">
       
       {/* Header Fijo */}
       <header className="bg-blue-600 text-white shadow-md sticky top-0 z-10">
