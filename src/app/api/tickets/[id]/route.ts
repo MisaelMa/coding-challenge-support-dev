@@ -16,17 +16,19 @@ export async function PATCH(
     const { id } = await params;
     const { status } = await request.json()
 
-    // Buscamos el ticket para ver su prioridad
+    // In production this would come from the JWT token or user session
+    const CURRENT_COMPANY_ID = 'TechCorp'
+
     const ticket = await prisma.ticket.findUnique({
       where: { id },
     })
 
-    if (!ticket) {
+    // Return 404 (not 403) to avoid revealing that the resource exists
+    if (!ticket || ticket.companyId !== CURRENT_COMPANY_ID) {
       return NextResponse.json({ error: 'Ticket no encontrado' }, { status: 404 })
     }
 
     if (ticket.priority === 'Urgente' && status === 'Resuelto') {
-      // Bug 3: Se queda esperando infinitamente
       await sendEmailNotification(ticket.id, ticket.companyId)
     }
 
