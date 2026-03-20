@@ -31,3 +31,26 @@ Acabas de iniciar tu día y recibes el siguiente mensaje por Slack de José (Pro
 4. Sube tu código a un repositorio público (GitHub/GitLab) y envíanos el enlace.
 
 **Nota:** Tienes total libertad de usar herramientas de IA para apoyarte. Lo que nos importa es cómo analizas el problema, cómo guías a la IA y la calidad de la solución final. ¡Éxitos!
+
+---
+
+## Solución
+
+### Bugs resueltos
+
+Cada bug fue corregido en un commit independiente con mensaje descriptivo:
+
+| # | Bug | Causa raíz | Fix | Commit |
+|---|-----|-----------|-----|--------|
+| 1 | Botón "Resolver" no funciona en móvil | El footer fijo (`fixed bottom-0 z-50`) cubría el último ticket, haciendo el botón intocable | Agregar `pb-24` al contenedor principal para dejar espacio debajo del footer | `fix(mobile)` |
+| 2 | La página requiere recarga para ver cambios de estado | Mutación directa del array de state: `tickets[i] = x; setTickets(tickets)` — React no detecta cambio por ser la misma referencia | Usar `setTickets((prev) => prev.map(...))` para crear un nuevo array inmutable | `fix(state)` |
+| 3 | Tickets "Urgente" se quedan cargando infinitamente | `sendEmailNotification()` retorna una Promise que nunca llama `resolve()`, bloqueando el `await` en el PATCH | Agregar `resolve()` dentro del callback de la Promise | `fix(api)` |
+| 4 | Fuga de datos: usuario ve tickets de otra empresa | El endpoint GET no filtra por `companyId`, retorna todos los tickets de la BD | Filtrar por `companyId` en GET **y** validar ownership en PATCH (retornando 404, no 403, para no revelar existencia del recurso) | `fix(security)` |
+
+### Feature adicional: Filtros por estado
+
+Los tabs del footer móvil ("Pendientes" / "Resueltos") eran puramente decorativos y en desktop no existía ningún mecanismo de filtrado. Se implementó:
+
+- **Mobile:** Footer funcional con 3 tabs (Pendientes / Todos / Resueltos) que filtran tickets por estado
+- **Desktop:** Tabs de filtro visibles arriba de la lista de tickets
+- Mensaje vacío contextual según el filtro seleccionado
