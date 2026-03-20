@@ -1,13 +1,10 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// Función auxiliar simulada para envío de correos
 async function sendEmailNotification(ticketId: string, companyId: string) {
-  // BUG 3 INTENCIONAL: Esta promesa nunca se resuelve
-  // El hilo se queda bloqueado esperando.
-  return new Promise((resolve) => {
-    console.log(`Enviando notificación urgente para el ticket ${ticketId}...`)
-    // Falta: resolve() o hay un error de lógica
+  return new Promise<void>((resolve) => {
+    console.log(`Enviando notificación urgente para el ticket ${ticketId} (${companyId})...`)
+    resolve()
   })
 }
 
